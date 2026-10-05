@@ -1,0 +1,6 @@
+{
+  "name": "Ashrafi Bridal Studio",
+  "description": "Ashrafi Bridal Studio — Luxury Pakistani bridal and women's fashion couture boutique in Tariq Road, Karachi. Handcrafted bridal lehengas, Nikah, Barat, Mehndi, Walima, and made-to-order collections.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

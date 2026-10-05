@@ -1,0 +1,89 @@
+@import "tailwindcss";
+
+@theme {
+  --font-display: "Cinzel", serif;
+  --font-serif: "Cormorant Garamond", Georgia, serif;
+  --font-sans: "Plus Jakarta Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --color-gold-300: #e2c99a;
+  --color-gold-400: #cbab6d;
+  --color-gold-500: #b38d4f;
+  --color-gold-600: #937138;
+  --color-maroon-900: #3b0914;
+  --color-maroon-950: #23040b;
+}
+
+html {
+  scroll-behavior: smooth;
+  font-family: var(--font-sans);
+  background-color: #FFFFFF;
+  color: #1A1816;
+}
+
+body {
+  background-color: #FFFFFF;
+  color: #1A1816;
+  min-height: 100vh;
+}
+
+/* Custom scrollbar for light luxury aesthetic */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: #f7f5f0;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #d6cebe;
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #997736;
+}
+
+/* Subtle gold foil border pattern */
+.border-gold-subtle {
+  border-color: rgba(179, 141, 79, 0.25);
+}
+
+.bg-gold-gradient {
+  background: linear-gradient(135deg, #d4b277 0%, #ba9657 50%, #997736 100%);
+}
+
+.text-gold-gradient {
+  background: linear-gradient(135deg, #785a23 0%, #a88444 50%, #684d1b 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+@keyframes slowZoom {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.04); }
+  100% { transform: scale(1); }
+}
+
+@keyframes floatGentle {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-6px); }
+}
+
+@keyframes shimmerGold {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
+.animate-slow-zoom {
+  animation: slowZoom 24s ease-in-out infinite;
+}
+
+.animate-float {
+  animation: floatGentle 5s ease-in-out infinite;
+}
+
+.animate-spin-very-slow {
+  animation: spin 45s linear infinite;
+}
+
