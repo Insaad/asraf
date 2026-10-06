@@ -61,7 +61,7 @@ export const AboutPage: React.FC = () => {
           <div className="lg:col-span-6">
             <div className="relative border border-[#E8E2D8] p-3 bg-[#FAF8F5] shadow-sm">
               <img
-                src="/src/assets/images/nikah_ivory_couture_1791159230888.jpg"
+                src="/images/nikah_ivory_couture_1791159230888.jpg"
                 alt="Ashrafi Bridal Studio Heritage"
                 className="w-full aspect-[4/3] object-cover object-top"
               />

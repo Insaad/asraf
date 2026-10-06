@@ -209,7 +209,7 @@ export const LookbookPage: React.FC = () => {
           <div className="relative border border-[#E8E2D8] bg-white p-4 max-w-2xl mx-auto shadow-sm">
             <div className="aspect-video bg-[#FAF8F5] relative flex items-center justify-center overflow-hidden group">
               <img
-                src="/src/assets/images/hero_bridal_editorial_1791159212402.jpg"
+                src="/images/hero_bridal_editorial_1791159212402.jpg"
                 alt="Ashrafi Bridal Studio Video Preview"
                 className="w-full h-full object-cover filter brightness-90 group-hover:scale-102 transition-transform duration-500"
               />

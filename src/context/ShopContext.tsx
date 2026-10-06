@@ -1,17 +1,6 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
-import { User } from 'firebase/auth';
 import { CartItem, PageRoute, Product, WishlistItem, CategoryTheme } from '../types';
 import { PRODUCTS, BOUTIQUE_INFO, CATEGORY_THEMES } from '../data/products';
-import {
-  initAuth,
-  googleSignIn,
-  googleLogout,
-  getAccessToken,
-} from '../services/googleAuth';
-import {
-  createSampleCatalogSpreadsheet,
-  fetchCatalogFromSpreadsheet,
-} from '../services/googleSheets';
 
 interface ShopContextType {
   currentRoute: PageRoute;
@@ -61,27 +50,9 @@ interface ShopContextType {
   formatPKR: (amount: number) => string;
   createWhatsAppLink: (message: string) => string;
 
-  // Live Products & Categories from Google Sheets
+  // Products & Categories
   products: Product[];
   categories: CategoryTheme[];
-
-  // Google Sheets Management
-  isGoogleSheetsOpen: boolean;
-  openGoogleSheetsModal: () => void;
-  closeGoogleSheetsModal: () => void;
-  googleUser: User | null;
-  isGoogleConnecting: boolean;
-  spreadsheetId: string;
-  setSpreadsheetId: (id: string) => void;
-  spreadsheetUrl: string;
-  setSpreadsheetUrl: (url: string) => void;
-  isSyncingSheets: boolean;
-  sheetsError: string | null;
-  lastSyncedAt: string | null;
-  handleGoogleSignIn: () => Promise<void>;
-  handleGoogleLogout: () => Promise<void>;
-  handleCreateSampleSheet: () => Promise<void>;
-  handleSyncFromSheets: () => Promise<void>;
 }
 
 const ShopContext = createContext<ShopContextType | undefined>(undefined);
@@ -95,172 +66,8 @@ export const ShopProvider: React.FC<{ children: React.ReactNode }> = ({ children
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
-  // Products state (can be updated live from Google Sheets)
-  const [products, setProducts] = useState<Product[]>(() => {
-    try {
-      const saved = localStorage.getItem('ashrafi_products_cached');
-      return saved ? JSON.parse(saved) : PRODUCTS;
-    } catch {
-      return PRODUCTS;
-    }
-  });
-
-  const [categories, setCategories] = useState<CategoryTheme[]>(() => {
-    return Object.values(CATEGORY_THEMES);
-  });
-
-  // Google Auth & Sheets Integration State
-  const [googleUser, setGoogleUser] = useState<User | null>(null);
-  const [isGoogleConnecting, setIsGoogleConnecting] = useState(false);
-  const [isGoogleSheetsOpen, setIsGoogleSheetsOpen] = useState(false);
-  const [isSyncingSheets, setIsSyncingSheets] = useState(false);
-  const [sheetsError, setSheetsError] = useState<string | null>(null);
-  const [lastSyncedAt, setLastSyncedAt] = useState<string | null>(() => {
-    return localStorage.getItem('ashrafi_sheets_last_synced');
-  });
-
-  const [spreadsheetId, setSpreadsheetIdState] = useState<string>(() => {
-    return localStorage.getItem('ashrafi_spreadsheet_id') || '';
-  });
-
-  const [spreadsheetUrl, setSpreadsheetUrlState] = useState<string>(() => {
-    return localStorage.getItem('ashrafi_spreadsheet_url') || '';
-  });
-
-  const setSpreadsheetId = (id: string) => {
-    setSpreadsheetIdState(id);
-    localStorage.setItem('ashrafi_spreadsheet_id', id);
-    if (id) {
-      const url = `https://docs.google.com/spreadsheets/d/${id}/edit`;
-      setSpreadsheetUrlState(url);
-      localStorage.setItem('ashrafi_spreadsheet_url', url);
-    }
-  };
-
-  const setSpreadsheetUrl = (url: string) => {
-    setSpreadsheetUrlState(url);
-    localStorage.setItem('ashrafi_spreadsheet_url', url);
-  };
-
-  // Initialize Firebase Auth listener
-  useEffect(() => {
-    const unsubscribe = initAuth(
-      (user) => {
-        setGoogleUser(user);
-      },
-      () => {
-        setGoogleUser(null);
-      }
-    );
-    return () => {
-      if (unsubscribe) unsubscribe();
-    };
-  }, []);
-
-  const openGoogleSheetsModal = () => setIsGoogleSheetsOpen(true);
-  const closeGoogleSheetsModal = () => setIsGoogleSheetsOpen(false);
-
-  const handleGoogleSignIn = async () => {
-    try {
-      setIsGoogleConnecting(true);
-      setSheetsError(null);
-      const res = await googleSignIn();
-      if (res) {
-        setGoogleUser(res.user);
-        if (spreadsheetId) {
-          // If a spreadsheet is already linked, sync immediately
-          await handleSyncFromSheets(res.accessToken);
-        }
-      }
-    } catch (err: any) {
-      setSheetsError(err.message || 'Google Sign-In failed');
-    } finally {
-      setIsGoogleConnecting(false);
-    }
-  };
-
-  const handleGoogleLogout = async () => {
-    await googleLogout();
-    setGoogleUser(null);
-  };
-
-  const handleCreateSampleSheet = async () => {
-    try {
-      setIsSyncingSheets(true);
-      setSheetsError(null);
-
-      let token = await getAccessToken();
-      if (!token) {
-        const signinRes = await googleSignIn();
-        if (!signinRes) throw new Error('Please sign in with Google to create the spreadsheet');
-        token = signinRes.accessToken;
-        setGoogleUser(signinRes.user);
-      }
-
-      const { spreadsheetId: newId, spreadsheetUrl: newUrl } =
-        await createSampleCatalogSpreadsheet(token);
-
-      setSpreadsheetId(newId);
-      setSpreadsheetUrl(newUrl);
-
-      // Now fetch and confirm the newly populated catalog
-      await handleSyncFromSheets(token, newId);
-    } catch (err: any) {
-      console.error(err);
-      setSheetsError(err.message || 'Failed to create sample spreadsheet');
-      throw err;
-    } finally {
-      setIsSyncingSheets(false);
-    }
-  };
-
-  const handleSyncFromSheets = async (
-    providedToken?: string,
-    targetSpreadsheetId?: string
-  ) => {
-    const idToUse = targetSpreadsheetId || spreadsheetId;
-    if (!idToUse) {
-      setSheetsError('Please enter or create a Google Spreadsheet first.');
-      return;
-    }
-
-    try {
-      setIsSyncingSheets(true);
-      setSheetsError(null);
-
-      let token = providedToken || (await getAccessToken());
-      if (!token) {
-        const signinRes = await googleSignIn();
-        if (!signinRes) throw new Error('Sign in required to read spreadsheet');
-        token = signinRes.accessToken;
-        setGoogleUser(signinRes.user);
-      }
-
-      const catalog = await fetchCatalogFromSpreadsheet(idToUse, token);
-
-      if (catalog.products.length > 0) {
-        setProducts(catalog.products);
-        try {
-          localStorage.setItem('ashrafi_products_cached', JSON.stringify(catalog.products));
-        } catch (e) {
-          console.warn(e);
-        }
-      }
-
-      if (catalog.categories.length > 0) {
-        setCategories(catalog.categories);
-      }
-
-      const nowStr = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-      setLastSyncedAt(nowStr);
-      localStorage.setItem('ashrafi_sheets_last_synced', nowStr);
-    } catch (err: any) {
-      console.error(err);
-      setSheetsError(err.message || 'Failed to sync data from Google Sheet');
-    } finally {
-      setIsSyncingSheets(false);
-    }
-  };
+  const products = PRODUCTS;
+  const categories = Object.values(CATEGORY_THEMES);
 
   // Cart with local storage persistence
   const [cart, setCart] = useState<CartItem[]>(() => {
@@ -437,28 +244,8 @@ export const ShopProvider: React.FC<{ children: React.ReactNode }> = ({ children
         closeSearchModal,
         formatPKR,
         createWhatsAppLink,
-
-        // Live Products & Categories from Google Sheets
         products,
         categories,
-
-        // Google Sheets Integration
-        isGoogleSheetsOpen,
-        openGoogleSheetsModal,
-        closeGoogleSheetsModal,
-        googleUser,
-        isGoogleConnecting,
-        spreadsheetId,
-        setSpreadsheetId,
-        spreadsheetUrl,
-        setSpreadsheetUrl,
-        isSyncingSheets,
-        sheetsError,
-        lastSyncedAt,
-        handleGoogleSignIn,
-        handleGoogleLogout,
-        handleCreateSampleSheet,
-        handleSyncFromSheets,
       }}
     >
       {children}

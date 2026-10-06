@@ -5,7 +5,7 @@ import { PageRoute } from '../../types';
 import { MapPin, Phone, Clock, Mail, CheckCircle2, ArrowRight } from 'lucide-react';
 
 export const Footer: React.FC = () => {
-  const { setCurrentRoute, openGoogleSheetsModal } = useShop();
+  const { setCurrentRoute } = useShop();
   const [email, setEmail] = useState('');
   const [subscribed, setSubscribed] = useState(false);
 
@@ -288,13 +288,6 @@ export const Footer: React.FC = () => {
         <div className="mt-14 pt-8 border-t border-[#E8E1D5] flex flex-col md:flex-row items-center justify-between text-[11px] text-[#877868] gap-4">
           <p>© {new Date().getFullYear()} Ashrafi Bridal Studio. All Rights Reserved. Karachi, Pakistan.</p>
           <div className="flex items-center gap-6">
-            <button
-              onClick={openGoogleSheetsModal}
-              className="text-[#93733A] hover:text-[#1E1B18] transition-colors underline font-medium cursor-pointer"
-            >
-              Google Sheets Live Sync
-            </button>
-            <span>·</span>
             <span>Illustrative Sample Catalogue & Pricing</span>
             <span>·</span>
             <span>Handcrafted in Karachi</span>

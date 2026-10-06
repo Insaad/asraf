@@ -17,7 +17,7 @@ interface CategoryPageProps {
 }
 
 export const CategoryPage: React.FC<CategoryPageProps> = ({ categoryId }) => {
-  const { setCurrentRoute, createWhatsAppLink, products } = useShop();
+  const { setCurrentRoute, openAppointmentModal, createWhatsAppLink, products } = useShop();
 
   const theme = CATEGORY_THEMES[categoryId] || CATEGORY_THEMES['nikah'];
 

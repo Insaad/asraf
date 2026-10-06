@@ -11,7 +11,6 @@ import {
   MessageCircle,
   ArrowRight,
   MapPin,
-  FileSpreadsheet,
 } from 'lucide-react';
 
 export const Header: React.FC = () => {
@@ -21,8 +20,6 @@ export const Header: React.FC = () => {
     wishlistCount,
     openWishlist,
     openSearchModal,
-    openGoogleSheetsModal,
-    spreadsheetId,
   } = useShop();
 
   const [menuOpen, setMenuOpen] = useState(false);
@@ -208,32 +205,6 @@ export const Header: React.FC = () => {
                       </button>
                     ))}
                   </div>
-                </div>
-
-                {/* Google Sheets Catalog Manager Link */}
-                <div className="p-3.5 bg-white border border-[#E8E2D8] hover:border-emerald-600 transition-colors shadow-2xs">
-                  <div className="flex items-center justify-between mb-1.5">
-                    <span className="text-[10px] uppercase tracking-widest text-emerald-800 font-semibold flex items-center gap-1.5">
-                      <FileSpreadsheet className="w-3.5 h-3.5 text-emerald-700" />
-                      <span>Google Sheets Sync</span>
-                    </span>
-                    {spreadsheetId && (
-                      <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" title="Connected" />
-                    )}
-                  </div>
-                  <p className="text-[11px] text-[#706456] mb-2.5">
-                    Live-edit prices, titles, images, descriptions & categories via your Google Sheet.
-                  </p>
-                  <button
-                    onClick={() => {
-                      setMenuOpen(false);
-                      openGoogleSheetsModal();
-                    }}
-                    className="w-full py-2 bg-[#1A1816] hover:bg-emerald-700 text-white text-[11px] font-semibold uppercase tracking-wider transition-colors flex items-center justify-center gap-1.5"
-                  >
-                    <FileSpreadsheet className="w-3.5 h-3.5 text-emerald-400" />
-                    <span>Manage Google Sheet</span>
-                  </button>
                 </div>
 
                 {/* Direct WhatsApp Concierge Block inside Menu */}

@@ -36,7 +36,7 @@ export const HomePage: React.FC = () => {
       urdu: 'نکاح',
       subtitle: 'Ivory Silks, Pearls & Silver Mukesh',
       route: 'nikah' as PageRoute,
-      image: '/src/assets/images/nikah_ivory_couture_1791159230888.jpg',
+      image: '/images/nikah_ivory_couture_1791159230888.jpg',
       color: '#9E7B3B',
     },
     {
@@ -45,7 +45,7 @@ export const HomePage: React.FC = () => {
       urdu: 'بارات',
       subtitle: 'Imperial Crimson Velvet & 24K Gold Zardozi',
       route: 'barat' as PageRoute,
-      image: '/src/assets/images/barat_royal_lehenga_1791159245316.jpg',
+      image: '/images/barat_royal_lehenga_1791159245316.jpg',
       color: '#8C1D2F',
     },
     {
@@ -54,7 +54,7 @@ export const HomePage: React.FC = () => {
       urdu: 'مہندی',
       subtitle: 'Festive Emerald, Saffron & Gota Patti',
       route: 'mehndi' as PageRoute,
-      image: '/src/assets/images/mehndi_celebratory_look_1791159262441.jpg',
+      image: '/images/mehndi_celebratory_look_1791159262441.jpg',
       color: '#065F46',
     },
     {
@@ -63,7 +63,7 @@ export const HomePage: React.FC = () => {
       urdu: 'ولیمہ',
       subtitle: 'Romantic Dusty Rose & Crystal Corsetry',
       route: 'walima' as PageRoute,
-      image: '/src/assets/images/walima_pastel_gown_1791159277503.jpg',
+      image: '/images/walima_pastel_gown_1791159277503.jpg',
       color: '#BE185D',
     },
   ];
@@ -75,7 +75,7 @@ export const HomePage: React.FC = () => {
         {/* High-Resolution Bridal Photography Background */}
         <div className="absolute inset-0 z-0 overflow-hidden">
           <img
-            src="/src/assets/images/luxury_bridal_hero_light_1791160503662.jpg"
+            src="/images/luxury_bridal_hero_light_1791160503662.jpg"
             alt="Ashrafi Bridal Studio"
             className="w-full h-full object-cover object-center animate-slow-zoom transition-opacity duration-1000 ease-out"
           />
@@ -328,7 +328,7 @@ export const HomePage: React.FC = () => {
             <div className="lg:col-span-6">
               <div className="relative border border-[#E6DFD5] p-3 bg-white shadow-sm">
                 <img
-                  src="/src/assets/images/barat_royal_lehenga_1791159245316.jpg"
+                  src="/images/barat_royal_lehenga_1791159245316.jpg"
                   alt="Zardozi Hand Embroidery at Ashrafi Atelier"
                   className="w-full aspect-[4/3] object-cover object-top"
                 />
